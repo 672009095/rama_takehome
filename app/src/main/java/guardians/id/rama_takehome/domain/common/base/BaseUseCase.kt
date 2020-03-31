@@ -5,6 +5,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * reusable base use case
+ */
 abstract class BaseUseCase <Entity> {
     private var params: Map<String, Any?> = emptyMap()
 

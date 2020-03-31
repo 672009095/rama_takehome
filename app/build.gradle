@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdkVersion 29
@@ -44,6 +45,9 @@ android {
             resValue "string", "app_name", "rama_takehome (PROD)"
             buildConfigField 'String', 'BASE_URL', '"https://api.github.com/"'
         }
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -94,4 +98,5 @@ dependencies {
     debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'
     releaseImplementation 'com.readystatesoftware.chuck:library-no-op:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 }

@@ -1,4 +1,4 @@
-package guardians.id.rama_takehome.presentation.search
+package guardians.id.rama_takehome.presentation.search.list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,42 +16,34 @@ import guardians.id.rama_takehome.presentation.common.base.BaseViewModel
 import guardians.id.rama_takehome.presentation.common.widget.paged.PagedFactory
 import guardians.id.rama_takehome.presentation.common.widget.paged.PagedState
 
-class SearchActivityViewModel(
-    private val q:String?,
-    private val getListOfSearchUseCase: GetListOfSearchUseCase,
-    private val getListOfSearchWithPageUseCase: GetListOfSearchWithPageUseCase
+class SearchListViewModel(
+private val q:String?,
+private val getListOfSearchUseCase: GetListOfSearchUseCase,
+private val getListOfSearchWithPageUseCase: GetListOfSearchWithPageUseCase
 ) : BaseViewModel(){
-
-    private val itemsMutable = MutableLiveData<ResultData<List<Search>>>()
-    val items: LiveData<ResultData<List<Search>>> = itemsMutable
 
     private val factory = PagedFactory(::getLisOfSearchWithPage)
     private val pagedListConfig = PagedList.Config.Builder()
         .setEnablePlaceholders(false)
-        .setInitialLoadSizeHint(1)
+        .setInitialLoadSizeHint(10)
         .setPageSize(10)
         .build()
 
     val searches = (LivePagedListBuilder(factory,pagedListConfig)).build()
     val searchesState: LiveData<PagedState> = factory.pagedState
 
-    suspend fun getListOfSearch(q: String?){
+    private suspend fun getLisOfSearchWithPage(page: Int?):
+            Either<Throwable, List<Search>> {
         val params = mapOf(
-            UseCaseConstant.q to q
-        )
-        getListOfSearchUseCase.addParams(params)
-            .invoke()
-            .toResult()
-            .run(itemsMutable::postValue)
-    }
-
-    suspend fun getLisOfSearchWithPage(page: Int?):
-        Either<Throwable, List<Search>>{
-        val params = mapOf(
-            UseCaseConstant.q to "pikachu",
-            UseCaseConstant.PAGINATION to Pagination(10,page?:1)
+            UseCaseConstant.q to q,
+            UseCaseConstant.PAGINATION to Pagination(pagedListConfig.pageSize,page?:1)
         )
         return getListOfSearchWithPageUseCase.addParams(params)
             .invoke(viewModelScope.coroutineContext)
+    }
+
+    fun retryLoadAtLast() {
+        val lastKey = searches.value?.lastKey as? Int ?: return
+        searches.value?.loadAround(lastKey)
     }
 }

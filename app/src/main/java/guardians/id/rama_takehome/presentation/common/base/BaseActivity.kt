@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import guardians.id.rama_takehome.presentation.common.ActivityLifecycle
 import guardians.id.rama_takehome.presentation.common.observer.AppActivityLifecycleObserver
 
+/**
+ * reusable base for activity
+ */
 abstract class BaseActivity : AppCompatActivity(),
     ActivityLifecycle {
     abstract val resourceLayout: Int?

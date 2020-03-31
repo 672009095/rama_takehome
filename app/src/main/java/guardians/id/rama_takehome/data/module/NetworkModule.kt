@@ -13,6 +13,9 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * this file is for generate return API or factory to gson
+ */
 val networkModule = module {
     factory {
         OkHttpClient.Builder().apply {
